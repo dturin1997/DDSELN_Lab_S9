@@ -5,7 +5,7 @@ exports.index = function (req, res) {
     res.sendFile(path.resolve('views/contactos.html'));
 };
 
-const create = async (req, res) => {
+exports.create = async (req, res) => {
         const { nombre, apellido, email, telefono, direccion, _id } = req.body;
 
         
@@ -45,7 +45,7 @@ const create = async (req, res) => {
     
 };
 
-const deleteContacto = async (req, res) => {
+exports.deleteContacto = async (req, res) => {
         const { id } = req.params;
         //var mongoose = require('mongoose');
         //var objectId = mongoose.Types.ObjectId(id);
@@ -71,4 +71,4 @@ exports.list = function (req, res) {
         });
 };
 
-export { create, deleteContacto }
+//export { create, deleteContacto }
