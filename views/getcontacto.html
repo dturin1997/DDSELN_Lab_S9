@@ -103,10 +103,10 @@
         </p>
       </div>
       <div class="col-4">
-        <form id="imageForm" action="/contactos/addcontacto" method="post">
+        <form id="imageForm" onsubmit="upsertContact(event)" method="post">
           <div class="caption">Ingrese sus datos</div>
           <input type="text" id="nombre" placeholder="Nombre" name="nombre" />
-          <input id="imageInput" type="file" accept="image/*" name="imageInput"/>
+          <input id="imageInput" type="file" accept="image/*" />
           
           <input
             type="text"
@@ -127,14 +127,66 @@
             id="direccion"
             name="direccion"
           />
+          <input type="hidden"  name="imagen" id="imagen">
           <input hidden type="text" placeholder="_id" id="_id" name="_id" />
           <button type="submit">Enviar</button>
         </form>
       </div>
     </div>
   </div>
-  <script src="../controllers/contactos.js"></script>
   <script>
+    async function upsertContact(event) { 
+      console.log(event)
+      event.preventDefault();
+      const file = imageInput.files[0];
+    
+      const { url } = await fetch("/s3Url").then((res) => res.json());
+      document.querySelector("#imagen").value = url
+    
+      await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: file,
+      });
+
+      const imageUrl = url.split("?")[0];
+
+      const img = document.createElement("img");
+      img.src = imageUrl;
+
+      document.body.appendChild(img);
+
+      const {target} = event
+
+      const dataForm = JSON.stringify( {
+        _id: target[7].value,
+        nombre: target[0].value,
+        apellido: target[2].value,
+        email: target[3].value,
+        telefono: target[4].value,
+        direccion:target[5].value,
+        imagen: target[6].value
+      })
+
+      const response = await fetch("/contactos/addcontacto", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: dataForm,
+      })
+
+      const data = await response.json()
+
+      if (data.ok ) {
+        window.location.reload()
+      } else {
+        alert("Ha ocurrido un error, no se pudo enviar tu imagen, prueba mas tarde")
+      }
+    }
+
     function fill_form(contacto) {
       console.log(contacto);
       console.log(typeof contacto);
@@ -148,6 +200,8 @@
       document.getElementById("direccion").value = dataContacto.direccion;
       document.getElementById("_id").value = dataContacto._id;
     }
+
+
     function delete_row(route) {
       console.log(route);
       fetch(route, {
@@ -155,76 +209,16 @@
       });
     }
 
-    const imageForm = document.querySelector("#imageForm");
-    const imageInput = document.querySelector("#imageInput");
+    // const imageForm = document.querySelector("#imageForm");
+    // const imageInput = document.querySelector("#imageInput");
 
-    var nombre = document.getElementById("nombre").value 
-    var apellido = document.getElementById("apellido").value
-    var email = document.getElementById("email");
-    var telefono = document.getElementById("telefono").value
-    var direccion = document.getElementById("direccion").value
-    var _id = document.getElementById("_id").value
+    // var nombre = document.getElementById("nombre").value 
+    // var apellido = document.getElementById("apellido").value
+    // var email = document.getElementById("email");
+    // var telefono = document.getElementById("telefono").value
+    // var direccion = document.getElementById("direccion").value
+    // var _id = document.getElementById("_id").value
 
-    imageForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const file = imageInput.files[0];
-      console.log("Soy el file");
-      console.log(file);
-      console.log("Soy el file");
-
-      // get secure url from our server
-      const { url } = await fetch("/s3Url").then((res) => res.json());
-      console.log(url);
-
-      // post the image direclty to the s3 bucket
-      await fetch(url, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        body: file,
-      });
-
-      const imageUrl = url.split("?")[0];
-      console.log(imageUrl);
-
-      /*
-      var route_add = "http://localhost:6005/contactos/addcontacto"
-
-      async function addContact(){
-        const res = await fetch(route_add, {
-        method: "POST",
-        headers: {
-          "Content-Type": 'application/json',
-        },
-        body: JSON.stringify({
-            "nombre": nombre,
-            "img_url": imageUrl,
-            "apellido": apellido,
-            "email": email,
-            "telefono": telefono,
-            "direccion": direccion,
-            "_id": _id
-        }),
-      });
-
-      const data = await res.json();
-      console.log(data);
-      }
-      
-      addContact()
-      */
-
-      // post requst to my server to store any extra data
-
-      const img = document.createElement("img");
-      img.src = imageUrl;
-      document.body.appendChild(img);
-
-      //document.getElementById("imageInputTxt").value = imageUrl;
-
-      console.log("Estoy al final de la imagen")
-      
-    });
+  
   </script>
 </html>

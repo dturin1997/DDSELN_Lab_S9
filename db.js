@@ -8,11 +8,11 @@ const {
     MONGO_DB
   } = process.env;
 */
-  const MONGO_USERNAME = 'mongo';
-  const MONGO_PASSWORD = 'mongo';
+  const MONGO_USERNAME = 'root';
+  const MONGO_PASSWORD = 'root';
   const MONGO_HOSTNAME = '127.0.0.1';
   const MONGO_PORT = '27017';
-  const MONGO_DB = 'ddseln_lab_s5';
+  const MONGO_DB = 'ddseln_lab_s9';
 /*
 const options = {
     useNewUrlParser: true,

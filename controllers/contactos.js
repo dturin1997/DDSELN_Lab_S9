@@ -1,80 +1,40 @@
 const path = require("path");
 const Contacto = require("../models/contactos");
-import fetch from "node-fetch";
-
-/*
-const imageForm = document.querySelector("#imageForm")
-const imageInput = document.querySelector("#imageInput")
-*/
 
 exports.index = function (req, res) {
   res.sendFile(path.resolve("views/contactos.html"));
 };
 
 exports.create = async (req, res) => {
-  const { nombre, apellido, email, telefono, direccion, _id, img_url } =
-    req.body;
-  
-        /* */
+  const body = req.body;
 
-        const file = imageInput.files[0]
+  console.log(body);
 
-        // get secure url from our server
-        const { url } = await fetch("/s3Url").then(res => res.json())
-        console.log(url)
-
-        // post the image direclty to the s3 bucket
-        await fetch(url, {
-        method: "PUT",
-        headers: {
-        "Content-Type": "multipart/form-data"
-        },
-        body: file
-        })
-
-        const imageUrl = url.split('?')[0]
-        console.log(imageUrl)
-
-  
-
-        /* */
-        console.log("imagen url")
-        console.log(imageUrl);
-        console.log("imagen url")
-        console.log("new Contacto " + newContacto);
-        console.log(req.body);
-        console.log(_id);
-
-  if (req.body._id) {
-    console.log("ID: " + req.body._id);
+  if (body._id) {
+    delete body._id;
     await Contacto.findByIdAndUpdate(
       _id,
       {
-        nombre: nombre,
-        imagen: imageUrl,
-        apellido: apellido,
-        email: email,
-        telefono: telefono,
-        direccion: direccion,
+        body,
       },
       { new: true }
     );
     res.redirect("/contactos/getcontactos");
   } else {
-    var newContacto = new Contacto({
-      nombre,
-      imagen: imageUrl,
-      apellido,
-      email,
-      telefono,
-      direccion,
-    });
+    delete body._id;
+    const newContacto = new Contacto(body);
 
     newContacto.save(function (err) {
       if (err) {
-        res.status(400).send("Unable to save contactos database");
+        res.status(400).json({
+          message: err,
+          ok: false,
+        });
       } else {
-        res.redirect("/contactos/getcontactos");
+        res.json({
+          ok: true,
+          data: "OK",
+        });
       }
     });
   }
@@ -101,8 +61,21 @@ exports.list = function (req, res) {
     if (err) {
       return res.send(500, err);
     }
+
+    let renderContacts = contactos.map((contacto) => {
+      return {
+        _id: contacto._id,
+        nombre: contacto.nombre,
+        apellido: contacto.apellido,
+        email: contacto.email,
+        telefono: contacto.telefono,
+        direccion: contacto.direccion,
+        imagen: contacto.imagen.split("?")[0],
+      };
+    });
+
     res.render("getcontacto", {
-      contactos: contactos,
+      contactos: renderContacts,
     });
   });
 };
