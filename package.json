@@ -2,7 +2,7 @@
   "name": "ddseln_lab_s5",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "start": "node -r esm app.js",
     "dev": "nodemon -r esm app.js"
@@ -15,10 +15,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.879.0",
+    "dotenv": "^8.2.0",
     "ejs": "^3.1.8",
     "esm": "^3.2.25",
     "express": "^4.18.1",
-    "mongoose": "^6.6.1"
+    "mongoose": "^6.6.1",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"

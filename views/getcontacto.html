@@ -1,120 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Delivery</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link href="/css/styles.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet" type="text/css">
-    <script src="https://kit.fontawesome.com/998eab3163.js" crossorigin="anonymous"></script>
-</head>
-<nav class="navbar navbar-dark navbar-static-top navbar-expand-md">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link href="/css/styles.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css?family=Merriweather:400,700"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script
+      src="https://kit.fontawesome.com/998eab3163.js"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <nav class="navbar navbar-dark navbar-static-top navbar-expand-md">
     <div class="container">
-        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span>
-        </button> <a class="navbar-brand" href="/">Contactos</a>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item"><a href="/" class="nav-link">Inicio</a>
-                </li>
-                <li class="active nav-item"><a href="/contactos" class="nav-link">Contactos</a>
-                </li>
-            </ul>
-        </div>
+      <button
+        type="button"
+        class="navbar-toggler collapsed"
+        data-toggle="collapse"
+        data-target="#bs-example-navbar-collapse-1"
+        aria-expanded="false"
+      >
+        <span class="sr-only">Toggle navigation</span>
+      </button>
+      <a class="navbar-brand" href="/">Contactos</a>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav mr-auto">
+          <li class="nav-item"><a href="/" class="nav-link">Inicio</a></li>
+          <li class="active nav-item">
+            <a href="/contactos" class="nav-link">Contactos</a>
+          </li>
+        </ul>
+      </div>
     </div>
-</nav>
-<div class="jumbotron text-center">
+  </nav>
+  <div class="jumbotron text-center">
     <h1>Contactos</h1>
-</div>
-<div class="container">
+  </div>
+  <div class="container">
     <div class="row">
-        
-	<div class="col-lg-8">
-            <p>
-              <center>
-                  <div class="caption">Contactos</div>
-              </center>
-              <center>
-                  <table>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Email</th>
-                    <th>Telefono</th>
-                    <th>Dirección</th>
-                    <th>Editar</th>
-                    <th>Eliminar</th>
+      <div class="col-lg-8">
+        <p>
+          <center>
+            <div class="caption">Contactos</div>
+          </center>
+          <center>
+            <table>
+              <th>Nombre</th>
+              <th>Imagen</th>
+              <th>Apellido</th>
+              <th>Email</th>
+              <th>Telefono</th>
+              <th>Dirección</th>
+              <th>Editar</th>
+              <th>Eliminar</th>
+
+              <% contactos.forEach(function(contacto) { %>
+              <tr>
+                <td><%= contacto.nombre %></td>
+                <td>
+                    <img src=<%= contacto.imagen %>></img>
                     
-                        <% contactos.forEach(function(contacto) { %>
-                        <tr>
-                            <td><%= contacto.nombre %></td>
-                            <td><%= contacto.apellido %></td>
-                            <td><%= contacto.email %></td>
-                            <td><%= contacto.telefono %></td>
-                            <td><%= contacto.direccion %></td>
-                            <td>
-                                <center>
-                                    <button>
-                                        <i class="fa-solid fa-pen-to-square"
-                                        id="<%= JSON.stringify(contacto); %>"
-                                        onclick="fill_form(this.id);"
-                                        ></i>
-                                    </button>
-                                        
-                                    
-                                </center>
-                                
-                            </td>
-                            <td>
-                                <center>
-                                    
-                                    <button id="/contactos/deletecontacto/<%= contacto._id %>" 
-                                    onclick="delete_row(this.id)">
-                                        <i class="fa-solid fa-trash"
-                                        ></i>
-                                    </button>
-                                </center>
-                            </td>
-                        </tr>
-                        <% }); %>
-                     
-                </table>
-            </center>
-            </p>
-        </div>
-        <div class="col-4">
-            <form action="/contactos/addcontacto" method="post">
-                <div class="caption">Ingrese sus datos</div>
-                <input type="text" id="nombre" placeholder="Nombre" name="nombre">
-                <input type="text" id="apellido" placeholder="Apellido" name="apellido">
-                <input type="text" id="email" placeholder="Email" name="email">
-                <input type="text" id="telefono" placeholder="Telefono" name="telefono">
-                <input type="text" placeholder="Direccion" id="direccion" name="direccion">
-                <input hidden type="text" placeholder="_id" id="_id" name="_id">
-                <button type="submit">Enviar</button>
-            </form>
-        </div>
+                </td>
+                <td><%= contacto.apellido %></td>
+                <td><%= contacto.email %></td>
+                <td><%= contacto.telefono %></td>
+                <td><%= contacto.direccion %></td>
+                <td>
+                  <center>
+                    <button>
+                      <i
+                        class="fa-solid fa-pen-to-square"
+                        id="<%= JSON.stringify(contacto); %>"
+                        onclick="fill_form(this.id);"
+                      ></i>
+                    </button>
+                  </center>
+                </td>
+                <td>
+                  <center>
+                    <button
+                      id="/contactos/deletecontacto/<%= contacto._id %>"
+                      onclick="delete_row(this.id)"
+                    >
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </center>
+                </td>
+              </tr>
+              <% }); %>
+            </table>
+          </center>
+        </p>
+      </div>
+      <div class="col-4">
+        <form id="imageForm" action="/contactos/addcontacto" method="post">
+          <div class="caption">Ingrese sus datos</div>
+          <input type="text" id="nombre" placeholder="Nombre" name="nombre" />
+          <input id="imageInput" type="file" accept="image/*" name="imageInput"/>
+          
+          <input
+            type="text"
+            id="apellido"
+            placeholder="Apellido"
+            name="apellido"
+          />
+          <input type="text" id="email" placeholder="Email" name="email" />
+          <input
+            type="text"
+            id="telefono"
+            placeholder="Telefono"
+            name="telefono"
+          />
+          <input
+            type="text"
+            placeholder="Direccion"
+            id="direccion"
+            name="direccion"
+          />
+          <input hidden type="text" placeholder="_id" id="_id" name="_id" />
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
     </div>
   </div>
+  <script src="../controllers/contactos.js"></script>
   <script>
     function fill_form(contacto) {
-        console.log(contacto)
-        console.log(typeof(contacto))
-        console.log(JSON.parse(contacto))
-        dataContacto = JSON.parse(contacto);  
-        
-        document.getElementById("nombre").value=dataContacto.nombre;
-        document.getElementById("apellido").value=dataContacto.apellido;
-        document.getElementById("email").value=dataContacto.email;
-        document.getElementById("telefono").value=dataContacto.telefono;
-        document.getElementById("direccion").value=dataContacto.direccion;
-        document.getElementById("_id").value=dataContacto._id;
-    };
-    function delete_row(route) {
-        console.log(route)
-        fetch(route,  {
-            method: 'DELETE'
-        })
+      console.log(contacto);
+      console.log(typeof contacto);
+      console.log(JSON.parse(contacto));
+      dataContacto = JSON.parse(contacto);
+
+      document.getElementById("nombre").value = dataContacto.nombre;
+      document.getElementById("apellido").value = dataContacto.apellido;
+      document.getElementById("email").value = dataContacto.email;
+      document.getElementById("telefono").value = dataContacto.telefono;
+      document.getElementById("direccion").value = dataContacto.direccion;
+      document.getElementById("_id").value = dataContacto._id;
     }
+    function delete_row(route) {
+      console.log(route);
+      fetch(route, {
+        method: "DELETE",
+      });
+    }
+
+    const imageForm = document.querySelector("#imageForm");
+    const imageInput = document.querySelector("#imageInput");
+
+    var nombre = document.getElementById("nombre").value 
+    var apellido = document.getElementById("apellido").value
+    var email = document.getElementById("email");
+    var telefono = document.getElementById("telefono").value
+    var direccion = document.getElementById("direccion").value
+    var _id = document.getElementById("_id").value
+
+    imageForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const file = imageInput.files[0];
+      console.log("Soy el file");
+      console.log(file);
+      console.log("Soy el file");
+
+      // get secure url from our server
+      const { url } = await fetch("/s3Url").then((res) => res.json());
+      console.log(url);
+
+      // post the image direclty to the s3 bucket
+      await fetch(url, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        body: file,
+      });
+
+      const imageUrl = url.split("?")[0];
+      console.log(imageUrl);
+
+      /*
+      var route_add = "http://localhost:6005/contactos/addcontacto"
+
+      async function addContact(){
+        const res = await fetch(route_add, {
+        method: "POST",
+        headers: {
+          "Content-Type": 'application/json',
+        },
+        body: JSON.stringify({
+            "nombre": nombre,
+            "img_url": imageUrl,
+            "apellido": apellido,
+            "email": email,
+            "telefono": telefono,
+            "direccion": direccion,
+            "_id": _id
+        }),
+      });
+
+      const data = await res.json();
+      console.log(data);
+      }
+      
+      addContact()
+      */
+
+      // post requst to my server to store any extra data
+
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      document.body.appendChild(img);
+
+      //document.getElementById("imageInputTxt").value = imageUrl;
+
+      console.log("Estoy al final de la imagen")
+      
+    });
   </script>
 </html>
